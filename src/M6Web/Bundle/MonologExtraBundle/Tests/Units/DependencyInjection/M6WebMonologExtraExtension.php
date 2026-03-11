@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class M6WebMonologExtraExtension extends atoum
 {
-    public function testLoad()
+    public function testLoad(): void
     {
         $extension = new TestedClass();
         $container = new ContainerBuilder();

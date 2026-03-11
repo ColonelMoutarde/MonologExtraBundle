@@ -7,8 +7,8 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class ContextInformationProcessor
 {
-    protected $container;
-    protected $expressionLanguage;
+    protected ContainerInterface $container;
+    protected ExpressionLanguage $expressionLanguage;
 
     public function __construct(ContainerInterface $container, ExpressionLanguage $expressionLanguage)
     {
@@ -18,10 +18,8 @@ class ContextInformationProcessor
 
     /**
      * Processor configuration
-     *
-     * @var array
      */
-    protected $configuration;
+    protected array $configuration;
 
     public function __invoke(LogRecord $record): LogRecord
     {
@@ -42,27 +40,18 @@ class ContextInformationProcessor
 
     /**
      * Evaluate configuration array
-     *
-     * @return array
      */
-    protected function evaluateConfiguration()
+    protected function evaluateConfiguration(): array
     {
-        $context = [];
-        foreach ($this->configuration as $key => $value) {
-            $context[$key] = $this->evaluateValue($value);
-        }
-
-        return $context;
+        return array_map(function ($value) {
+            return $this->evaluateValue($value);
+        }, $this->configuration);
     }
 
     /**
      * Evaluate configuration value
-     *
-     * @param string $value
-     *
-     * @return string
      */
-    protected function evaluateValue($value)
+    protected function evaluateValue(string $value): string
     {
         if (preg_match('/^expr\((.*)\)$/', $value, $matches)) {
             return $this->expressionLanguage->evaluate($matches[1], ['container' => $this->container]);

@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->validate()
                             ->ifTrue(function ($v) {
-                                return isset($v['handler']) && isset($v['channel']);
+                                return isset($v['handler'], $v['channel']);
                             })
                             ->thenInvalid('You can define a channel or a handler but not both.')
                         ->end()
